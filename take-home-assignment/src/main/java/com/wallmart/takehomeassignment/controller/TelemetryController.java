@@ -1,5 +1,7 @@
 package com.wallmart.takehomeassignment.controller;
 
+import java.io.IOException;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -11,10 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.wallmart.takehomeassignment.exception.ServiceError;
-import com.wallmart.takehomeassignment.model.TelemetryResponse;
 import com.wallmart.takehomeassignment.service.ITelemetryService;
 
 import io.swagger.annotations.ApiOperation;
@@ -36,12 +35,12 @@ public class TelemetryController {
 			@ApiResponse(code = 500, message = "Internal Server Error", response = ServiceError.class) })
 	@GetMapping
 	public ResponseEntity<?> retrieveTelemetry(HttpServletRequest httpServletRequest,
-			HttpServletResponse httpServletResponse) throws JsonMappingException, JsonProcessingException {
+			HttpServletResponse httpServletResponse) throws IOException {
 
 		log.debug("Telemetry controller start ---");
-		TelemetryResponse data = iTelemetryService.retrieveTelemetry(httpServletRequest, httpServletResponse);
+		iTelemetryService.writeTelemetryToFile(httpServletRequest, httpServletResponse);
 		log.debug("Telemetry controller end ---");
-		return new ResponseEntity<>(data, HttpStatus.OK);
+		return new ResponseEntity<>("Success", HttpStatus.OK);
 	}
 
 }
